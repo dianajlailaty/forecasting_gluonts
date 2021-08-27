@@ -36,7 +36,7 @@ from sklearn.model_selection import ParameterGrid
 import statistics
 import math
 
-directory_path = "morphemic_project/morphemic_integration/forecasting_gluonts/"
+directory_path = "/morphemic_project/forecasting_gluonts/gluonts/"
 
 def train(metric):
     #loading the dataset
