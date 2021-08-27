@@ -49,7 +49,7 @@ def worker(self,body,metric):
             epoch_start = predictionTimes[metric]
             flags[metric] = 1
         #load the model
-        with open(directory_path+"models/gluonts"+metric+".pkl", 'rb') as f:
+        with open(directory_path+"models/gluonts_"+metric+".pkl", 'rb') as f:
             models[metric] = pickle.load(f)
         timestamp = int(time())   
         if (timestamp >= predictionTimes[metric]):        
