@@ -1,0 +1,36 @@
+FROM tiangolo/uwsgi-nginx-flask:python3.8
+RUN python3 -m pip install --upgrade pip 
+RUN apt update &&\
+    apt upgrade -y && \
+    apt install -y swig
+COPY ./src/requirements.txt /
+RUN pip install -r /requirements.txt 
+
+
+ENV NGINX_WORKER_PROCESSES auto
+ENV NGINX_WORKER_CONNECTIONS 1024
+ENV NGINX_WORKER_OPEN_FILES 1024
+
+ENV LISTEN_PORT 8766
+
+ADD ./datasetlib /app/datasetlib
+RUN pip install /app/datasetlib
+
+EXPOSE 8766 8767
+
+ENV UWSGI_CHEAPER 1
+
+RUN mkdir -p /var/performance_model
+RUN mkdir -p /var/performance_model/datasets &&\
+    mkdir -p /var/performance_model/models &&\
+    mkdir -p /var/performance_model/train &&\
+    mkdir -p /var/performance_model/logs &&\
+    mkdir -p /var/performance_model/db 
+
+COPY ./src /app 
+COPY ./deployment/uwsgi.ini /app
+#COPY ./src/db/prediction.db /var/performance_model/db 
+RUN chown www-data:www-data /app/db/prediction.db 
+RUN chmod a+rw /app/db/ /app/db/*
+RUN chown -R www-data:www-data /var/performance_model
+

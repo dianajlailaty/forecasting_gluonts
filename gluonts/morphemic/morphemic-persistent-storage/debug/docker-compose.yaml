@@ -1,0 +1,15 @@
+version: '2'
+
+services:
+  
+  prophet:
+    #image: gitlab.ow2.org:4567/melodic/morphemic-preprocessor/prophet:morphemic-rc1.5
+    image: activeeon/morphemic
+    #network_mode: bridge
+    container_name: prophet
+    env_file:
+      - variables.env
+    #volumes:
+      #- /logs:/morphemic_project/morphemic_integration/forecasting_prophet/logs
+
+

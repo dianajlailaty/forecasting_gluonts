@@ -1,0 +1,9 @@
+README.txt
+setup.py
+datasetmaker.egg-info/PKG-INFO
+datasetmaker.egg-info/SOURCES.txt
+datasetmaker.egg-info/dependency_links.txt
+datasetmaker.egg-info/requires.txt
+datasetmaker.egg-info/top_level.txt
+morphemic/__init__.py
+morphemic/dataset/__init__.py

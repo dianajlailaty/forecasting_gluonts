@@ -1,0 +1,75 @@
+version: '2'
+
+services:
+  database:
+    build:
+      context: ./database
+    container_name: database
+    network_mode: bridge
+    restart: always
+    volumes:
+      - "./database/data:/var/lib/influxdb"
+    ports: 
+      - 8086:8086
+    env_file:
+      - variables.env
+  publisher:
+    image: jdtotow/publisher
+    container_name: publisher
+    restart: always
+    env_file:
+      - variables.env
+  
+  activemq:
+    image: jdtotow/activemq
+    container_name: activemq
+    network_mode: bridge
+    env_file:
+      - variables.env
+    ports:
+      # mqtt
+      - "1883:1883"
+      # amqp
+      - "5672:5672"
+      # ui
+      - "8161:8161"
+      # stomp
+      - "61613:61613"
+      # ws
+      - "61614:61614"
+      # jms
+      - "61616:61616"
+      # jms prometheus agent
+      - "8080:8080"
+    #volumes: ["activemq-data:/opt/activemq/conf", "activemq-data:/data/activemq", "activemq-data:/var/log/activemq"]
+    env_file:
+      - variables.env
+
+  prophet:
+    image: gitlab.ow2.org:4567/melodic/morphemic-preprocessor/prophet:morphemic-rc1.5
+    #image: activeeon/morphemic
+    network_mode: bridge
+    container_name: prophet
+    env_file:
+      - variables.env
+    #volumes:
+      #- /logs:/morphemic_project/morphemic_integration/forecasting_prophet/logs
+
+      
+  gluonts:
+    image: gitlab.ow2.org:4567/melodic/morphemic-preprocessor/gluonmachines:morphemic-rc1.5
+    #image: activeeon/morphemic
+    network_mode: bridge
+    container_name: gluonmachines
+    env_file:
+      - variables.env
+    #volumes:
+      #- /logs:/morphemic_project/morphemic_integration/forecasting_gluonts/logs
+
+  #prometheus:
+  #  image: prom/prometheus
+  #  ports:
+  #    - 9090:9090
+  #  container_name: prometheus
+  #  volumes:
+  #  - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml

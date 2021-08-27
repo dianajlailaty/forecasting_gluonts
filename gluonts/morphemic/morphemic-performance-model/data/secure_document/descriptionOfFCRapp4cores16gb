@@ -1,0 +1,17 @@
+Secure Documents application​
+
+Experiment with Secure Documents application was run on the instances with 4 cores and 16 GB of memory. The number of users has generated automatically in the range of 0 to 10. A new number of users was chosen in the random interval of time according to Poisson distribution with lambda 3000 milliseconds and constant delay offset 30000. Each user generates one request. Reconfiguration was allowed, min number of machines was 1, maximum 10. The application was running for 2 hours.​
+
+The file contains rows with the following data:​
+
+Timestamp​ - the time when one request was sent by one user. Present in format YYYY-MM-DD HH:mm:ss
+
+numebrOfRequest – number of requests which are sending requests to the application.​
+
+AvgResponseTime – average response time in the last 30 seconds​.
+
+nrOfInstances – number of components running in parallel in a given moment.
+
+AvgMemory – average memory utilisation in the last 30 seconds​.
+
+AvgCPU - average CPU utilisation in the last 30 seconds​.

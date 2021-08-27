@@ -1,0 +1,4 @@
+flask
+influxdb
+stomp.py
+requests
