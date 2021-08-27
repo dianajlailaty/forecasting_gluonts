@@ -141,26 +141,23 @@ class Gluonts(morphemic.handler.ModelHandler,messaging.listener.MorphemicListene
                 
 
     def on_metrics_to_predict(self, body):
-
+        logging.debug("check the trained model for :") 
         logging.debug(body) 
-        
         #getting data from datasetmaker
         dataset_preprocessor = CSVData(APP_NAME,start_collection='2h')
         dataset_preprocessor.prepare_csv()
         logging.debug("DATASET DOWNLOADED")
         
-        
         for r in body:
             metric = r['metric']
         #for metric in metrics:
-
             if not os.path.isfile(directory_path+'models/gluonts_'+metric+".pkl"): 
-                logging.debug("Training a Gluonts model for metric : " + metric)
+                logging.debug("Training a GluonTS model for metric : " + metric)
                 model=gluonts.train(metric)
-                flags[metric]=1
                 pkl_path = directory_path+"models/gluonts_"+metric+".pkl"
                 with open(pkl_path, "wb") as f:
                     pickle.dump(model, f)
+                    logging.debug("model dumped")
                 #flags[metric]=1
             metrics.add(metric)
         
@@ -174,6 +171,7 @@ class Gluonts(morphemic.handler.ModelHandler,messaging.listener.MorphemicListene
             "timestamp": int(time())
             }   
         )
+
     
     def on_stop_forecasting_gluonmachines(self, body):
         logging.debug("Gluonts Stop Forecasting the following metrics :")
