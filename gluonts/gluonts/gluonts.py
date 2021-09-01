@@ -41,8 +41,12 @@ directory_path = "/morphemic_project/forecasting_gluonts/gluonts/"
 def train(metric):
     #loading the dataset
     #filename='dataset/demo'
+    print(os.getcwd())
+    data_path = os.environ.get("DATA_PATH")
     filename = os.environ.get("APP_NAME")
-    dataset= pd.read_csv(filename + ".csv")
+    datafile = os.path.join(data_path,filename)
+    
+    dataset= pd.read_csv(datafile + ".csv")
   
     #changing the names and the format of the attributes
     gluonts_dataset= pd.DataFrame()
