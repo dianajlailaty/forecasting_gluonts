@@ -1,6 +1,6 @@
 import messaging
 import morphemic
-import gluonts
+from gluonts import gluonts
 from time import time
 import logging
 import signal
