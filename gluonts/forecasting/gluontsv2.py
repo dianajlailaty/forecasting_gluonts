@@ -58,6 +58,7 @@ def worker(self,body,metric):
                 logging.debug(predictionTimes[metric])
                 logging.debug("Start the prediction for metric: " + metric)
                 predictions=gluonts.predict(models[metric] , number_of_forward_predictions , prediction_horizon , epoch_start , metric)
+                logging.debug(predictions)
                 yhats = predictions['values']
                 yhat_lowers = predictions['mins']
                 yhat_uppers = predictions['maxs']
