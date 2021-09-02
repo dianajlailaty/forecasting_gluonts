@@ -49,48 +49,50 @@ def worker(self,body,metric):
             epoch_start = predictionTimes[metric]
             flags[metric] = 1
         #load the model
-        with open(directory_path+"models/gluonts_"+metric+".pkl", 'rb') as f:
-            models[metric] = pickle.load(f)
-        timestamp = int(time())   
-        if (timestamp >= predictionTimes[metric]):        
-            predictions=gluonts.predict(models[metric] , number_of_forward_predictions , prediction_horizon , epoch_start , metric)
-            yhats = predictions['values']
-            yhat_lowers = predictions['mins']
-            yhat_uppers = predictions['maxs']
-            
-            prediction_time= epoch_start+ prediction_horizon
-            timestamp = int(time())
-            
-            #read probabilities file
-            probs = np.load(directory_path+'prob_file.npy' , allow_pickle='TRUE').item()
+        if  os.path.isfile(directory_path+'models/gluonts_'+metric+".pkl"):  
+            logging.debug("Loading the trained model for metric: " + metric)
+            with open(directory_path+"models/gluonts_"+metric+".pkl", 'rb') as f:
+                models[metric] = pickle.load(f)
+            timestamp = int(time())   
+            if (timestamp >= predictionTimes[metric]):        
+                predictions=gluonts.predict(models[metric] , number_of_forward_predictions , prediction_horizon , epoch_start , metric)
+                yhats = predictions['values']
+                yhat_lowers = predictions['mins']
+                yhat_uppers = predictions['maxs']
 
-        
-            logging.debug("Sending predictions for metric: "+ metric)
-            
-            
-            for k in range(0,len(predictions['values'])):
-                yhat = yhats[k]
-                yhat_lower = yhat_lowers[k]
-                yhat_upper = yhat_uppers[k]
-                
-                self.connector.send_to_topic('intermediate_prediction.gluonmachines.'+metric,               
-                
-                {
-                    "metricValue": float(yhat),
-                    "level": 3,
-                    "timestamp": timestamp,
-                    "probability": probs[metric],
-                    "confidence_interval" : [float(yhat_lower),float(yhat_upper)],
-                    "horizon": prediction_horizon,
-                    "predictionTime" : int(prediction_time),
-                    "refersTo": "todo",
-                    "cloud": "todo",
-                    "provider": "todo"  
-                    })
-                    
-                prediction_time=prediction_time + prediction_horizon
-            epoch_start = epoch_start+ prediction_horizon
-            sleep(prediction_horizon-5)
+                prediction_time= epoch_start+ prediction_horizon
+                timestamp = int(time())
+
+                #read probabilities file
+                probs = np.load(directory_path+'prob_file.npy' , allow_pickle='TRUE').item()
+
+
+                logging.debug("Sending predictions for metric: "+ metric)
+
+
+                for k in range(0,len(predictions['values'])):
+                    yhat = yhats[k]
+                    yhat_lower = yhat_lowers[k]
+                    yhat_upper = yhat_uppers[k]
+
+                    self.connector.send_to_topic('intermediate_prediction.gluonmachines.'+metric,               
+
+                    {
+                        "metricValue": float(yhat),
+                        "level": 3,
+                        "timestamp": timestamp,
+                        "probability": probs[metric],
+                        "confidence_interval" : [float(yhat_lower),float(yhat_upper)],
+                        "horizon": prediction_horizon,
+                        "predictionTime" : int(prediction_time),
+                        "refersTo": "todo",
+                        "cloud": "todo",
+                        "provider": "todo"  
+                        })
+
+                    prediction_time=prediction_time + prediction_horizon
+                epoch_start = epoch_start+ prediction_horizon
+                sleep(prediction_horizon-5)
         
 
 class Gluonts(morphemic.handler.ModelHandler,messaging.listener.MorphemicListener):
