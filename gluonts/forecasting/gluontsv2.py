@@ -40,10 +40,7 @@ def worker(self,body,metric):
     number_of_forward_predictions = body["number_of_forward_predictions"]   
     epoch_start= body["epoch_start"]
     predictionTimes[metric] = epoch_start
-
-    if  os.path.isfile(directory_path+'models/gluonts_'+metric+".pkl"):  
-        logging.debug("Loading the trained model for metric: " + metric)
-        
+    
     while(True):
         if flags[metric] == 0:
             epoch_start = predictionTimes[metric]
@@ -53,8 +50,13 @@ def worker(self,body,metric):
             logging.debug("Loading the trained model for metric: " + metric)
             with open(directory_path+"models/gluonts_"+metric+".pkl", 'rb') as f:
                 models[metric] = pickle.load(f)
+                logging.debug("Model loaded for metric: " + metric)
+                 
             timestamp = int(time())   
-            if (timestamp >= predictionTimes[metric]):        
+            if (timestamp >= predictionTimes[metric]): 
+                logging.debug(timestamp)
+                logging.debug(predictionTimes[metric])
+                logging.debug("Start the prediction for metric: " + metric)
                 predictions=gluonts.predict(models[metric] , number_of_forward_predictions , prediction_horizon , epoch_start , metric)
                 yhats = predictions['values']
                 yhat_lowers = predictions['mins']
