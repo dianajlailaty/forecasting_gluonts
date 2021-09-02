@@ -240,6 +240,7 @@ def predict(model , number_of_forward_predictions , prediction_horizon , epoch_s
     )
     logging.debug("241")
     forecasts = list(forecast_it)
+    logging.debug(forecasts)
     forecast_entry = forecasts[0]
     
     predictions=forecast_entry.samples
