@@ -187,10 +187,11 @@ def train(metric):
 
 def predict(model , number_of_forward_predictions , prediction_horizon , epoch_start , metric ):
 
-
+    logging.debug("190")
     data_file_path = os.path.join(os.environ.get("DATA_PATH", "./"), f'{os.environ.get("APP_NAME", "demo")}.csv')
     #dataset= pd.read_csv("/morphemic_project/forecasting_prophet/prophet/default_application.csv")
     dataset = pd.read_csv(data_file_path)
+    logging.debug("194")
     gluonts_dataset= pd.DataFrame()
     gluonts_dataset['ds'] = dataset["time"]
     gluonts_dataset['y']=dataset[metric]
@@ -199,13 +200,15 @@ def predict(model , number_of_forward_predictions , prediction_horizon , epoch_s
     for i in range(0,len(gluonts_dataset)):
         ds=gluonts_dataset['ds'][i]
         gluonts_dataset['ds'][i+1]=ds + timedelta(seconds=60)
-    
+    logging.debug("203")
+
     gluonts_dataset['y'] = pd.to_numeric(gluonts_dataset['y'], errors='coerce')
     
     for i in range(0,len(gluonts_dataset['y'])):
         if math.isnan(float(gluonts_dataset['y'][i])):
             gluonts_dataset['y'][i] = gluonts_dataset['y'].mean()
-    
+    logging.debug("210")
+
     future = list()
     for i in range(1, number_of_forward_predictions+1):
         dateInSec = epoch_start + i*prediction_horizon*60
@@ -215,6 +218,8 @@ def predict(model , number_of_forward_predictions , prediction_horizon , epoch_s
     future.columns = ['ds']
     
     target = list(gluonts_dataset.y[-number_of_forward_predictions:])
+    logging.debug("221")
+
 
     
     for i in range(0,len(target)):
@@ -254,8 +259,8 @@ def predict(model , number_of_forward_predictions , prediction_horizon , epoch_s
         mins.append(mini)
         maxs.append(maxi)
         values.append(value)
-      
-    
+    logging.debug("262")
+
     returnDict = {'mins':mins, 'maxs':maxs, 'values':values}
     
     return returnDict
