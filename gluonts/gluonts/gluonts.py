@@ -223,21 +223,22 @@ def predict(model , number_of_forward_predictions , prediction_horizon , epoch_s
 
     
     for i in range(0,len(target)):
+        logging.debug("226")
         new_row = {'ds': future['ds'][i], 'y':target[i]}
         gluonts_dataset=gluonts_dataset.append( new_row , ignore_index=True)
     
-    
+    logging.debug("229")
     gluonts_dataset=gluonts_dataset.set_index('ds')      
      
     test_time =  list(future['ds'])[-1]
     test_ds = ListDataset([{"start":gluonts_dataset.index[0],"target":gluonts_dataset.y[:test_time]}],freq='1min')
-    
+    logging.debug("235")
     forecast_it, ts_it = make_evaluation_predictions(
         dataset=test_ds,  # test dataset
         predictor=model,  # predictor
         num_samples=20,  # number of sample paths we want for evaluation
     )
-   
+    logging.debug("241")
     forecasts = list(forecast_it)
     forecast_entry = forecasts[0]
     
@@ -246,12 +247,14 @@ def predict(model , number_of_forward_predictions , prediction_horizon , epoch_s
     mins=list()
     maxs=list()
     values=list()
-    
+    logging.debug("250")
     returnDict=dict()
     for i in range(0 , number_of_forward_predictions):
+        logging.debug("253")
         mylist=list()
         for line in predictions:
             mylist.append(line[i])
+        logging.debug("257")
         mini = min(mylist)
         maxi = max(mylist)
         value = statistics.mean(mylist)
@@ -259,9 +262,10 @@ def predict(model , number_of_forward_predictions , prediction_horizon , epoch_s
         mins.append(mini)
         maxs.append(maxi)
         values.append(value)
+        
     logging.debug("262")
 
     returnDict = {'mins':mins, 'maxs':maxs, 'values':values}
-    
+    logging.debug("269")
     return returnDict
  
