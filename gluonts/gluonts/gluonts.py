@@ -216,22 +216,26 @@ def predict(model , number_of_forward_predictions , prediction_horizon , epoch_s
         future.append(date)
     future = pd.DataFrame(future)
     future.columns = ['ds']
-    
+    logging.debug("future")
+    logging.debug(future)
     target = list(gluonts_dataset.y[-number_of_forward_predictions:])
     logging.debug("221")
-
+    logging.debug(target)
 
     
     for i in range(0,len(target)):
         logging.debug("226")
         new_row = {'ds': future['ds'][i], 'y':target[i]}
         gluonts_dataset=gluonts_dataset.append( new_row , ignore_index=True)
-    
+        
     logging.debug("229")
     gluonts_dataset=gluonts_dataset.set_index('ds')      
-     
+    logging.debug("dataset")
+    logging.debug(gluonts_dataset)
     test_time =  list(future['ds'])[-1]
     test_ds = ListDataset([{"start":gluonts_dataset.index[0],"target":gluonts_dataset.y[:test_time]}],freq='1min')
+    logging.debug("test_ds")
+    logging.debug(test_ds)
     logging.debug("235")
     forecast_it, ts_it = make_evaluation_predictions(
         dataset=test_ds,  # test dataset
@@ -239,6 +243,7 @@ def predict(model , number_of_forward_predictions , prediction_horizon , epoch_s
         num_samples=20,  # number of sample paths we want for evaluation
     )
     logging.debug("241")
+    logging.debug(forecast_it)
     forecasts = list(forecast_it)
     logging.debug(forecasts)
     forecast_entry = forecasts[0]
