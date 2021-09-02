@@ -42,12 +42,10 @@ def train(metric):
     #loading the dataset
     #filename='dataset/demo'
     print(os.getcwd())
-    data_path = os.environ.get("DATA_PATH")
-    filename = os.environ.get("APP_NAME")
-    datafile = os.path.join(data_path,filename)
-    
-    dataset= pd.read_csv(datafile + ".csv")
-  
+    data_file_path = os.path.join(os.environ.get("DATA_PATH", "./"), f'{os.environ.get("APP_NAME", "demo")}.csv')
+    #dataset= pd.read_csv("/morphemic_project/forecasting_prophet/prophet/default_application.csv")
+    dataset = pd.read_csv(data_file_path)
+   
     #changing the names and the format of the attributes
     gluonts_dataset= pd.DataFrame()
     gluonts_dataset['ds'] = dataset["time"]
