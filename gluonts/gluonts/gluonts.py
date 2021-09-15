@@ -39,11 +39,7 @@ import math
 directory_path = "/morphemic_project/forecasting_gluonts/gluonts/"
 
 def train(metric):
-    #loading the dataset
-    #filename='dataset/demo'
-    print(os.getcwd())
     data_file_path = os.path.join(os.environ.get("DATA_PATH", "./"), f'{os.environ.get("APP_NAME", "demo")}.csv')
-    #dataset= pd.read_csv("/morphemic_project/forecasting_prophet/prophet/default_application.csv")
     dataset = pd.read_csv(data_file_path)
    
     #changing the names and the format of the attributes
@@ -120,7 +116,6 @@ def train(metric):
     item_metrics_all=list()
     for params in all_params:
         estimator = DeepAREstimator(
-                            #num_hidden_dimensions=[params['num_hidden_dimensions']],
                             prediction_length=prediction_length,
                             context_length=params['context_length'],
                             freq=freq,
@@ -166,9 +161,7 @@ def train(metric):
                 
     
     predictor1 = estimator1.train(training_data=validation_ds)
-    
-
-    #probabilities[metric] = prob
+   
     #checking if probabilities file exist
     prob=0.8
     if(os.path.isfile(directory_path+'prob_file.npy')):
@@ -189,7 +182,6 @@ def predict(model , number_of_forward_predictions , prediction_horizon , epoch_s
 
     
     data_file_path = os.path.join(os.environ.get("DATA_PATH", "./"), f'{os.environ.get("APP_NAME", "demo")}.csv')
-    #dataset= pd.read_csv("/morphemic_project/forecasting_prophet/prophet/default_application.csv")
     dataset = pd.read_csv(data_file_path)
     
     gluonts_dataset= pd.DataFrame()
