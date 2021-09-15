@@ -99,16 +99,11 @@ class Gluonts(morphemic.handler.ModelHandler,messaging.listener.MorphemicListene
     id = "gluonmachines"
     def __init__(self):
         self._run =  False
-        logging.debug(ACTIVEMQ_USER)
-        logging.debug(ACTIVEMQ_PASSWORD)
-        logging.debug(ACTIVEMQ_HOSTNAME)
-        logging.debug(ACTIVEMQ_PORT)
         self.connector = messaging.morphemic.Connection(ACTIVEMQ_USER,ACTIVEMQ_PASSWORD, host=ACTIVEMQ_HOSTNAME, port=ACTIVEMQ_PORT)
         #self.connector = messaging.morphemic.Connection('morphemic','morphemic', host='147.102.17.76', port=61616)
         #self.model = morphemic.model.Model(self)
 
     def run(self):
-        logging.debug("setting up")
         self.connector.connect()
         self.connector.set_listener(self.id, self)
         self.connector.topic("start_forecasting.gluonmachines", self.id)
@@ -116,7 +111,6 @@ class Gluonts(morphemic.handler.ModelHandler,messaging.listener.MorphemicListene
         self.connector.topic("metrics_to_predict", self.id)
         
     def reconnect(self):
-        print('Reconnecting to ActiveMQ')
         self.connector.disconnect()
         self.run()
         pass
@@ -124,6 +118,7 @@ class Gluonts(morphemic.handler.ModelHandler,messaging.listener.MorphemicListene
     def on_start_forecasting_gluonmachines(self, body):
         logging.debug("Gluonts Start Forecasting the following metrics :") 
         sent_metrics = body["metrics"]
+        logging.debug(sent_metrics)
         for metric in sent_metrics:
             if metric not in metrics:
                 metrics.add(metric)
