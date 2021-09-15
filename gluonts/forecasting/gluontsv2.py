@@ -33,8 +33,7 @@ metrics = set()
 directory_path = "/morphemic_project/forecasting_gluonts/gluonts/"
 
 def worker(self,body,metric):
-    
-    #logging.debug("Forecasting metric: " + metric)
+
     timestamp = body['timestamp']
     prediction_horizon = body["prediction_horizon"]
     number_of_forward_predictions = body["number_of_forward_predictions"]   
@@ -54,7 +53,6 @@ def worker(self,body,metric):
                  
             timestamp = int(time())   
             if (timestamp >= predictionTimes[metric]): 
-                
                 logging.debug("Start the prediction for metric: " + metric)
                 predictions=gluonts.predict(models[metric] , number_of_forward_predictions , prediction_horizon , epoch_start , metric)
                 logging.debug(predictions)
@@ -99,17 +97,12 @@ def worker(self,body,metric):
 
 class Gluonts(morphemic.handler.ModelHandler,messaging.listener.MorphemicListener):
     id = "gluonmachines"
-    
-    #probabilities = dict()
-
     def __init__(self):
         self._run =  False
         logging.debug(ACTIVEMQ_USER)
         logging.debug(ACTIVEMQ_PASSWORD)
         logging.debug(ACTIVEMQ_HOSTNAME)
         logging.debug(ACTIVEMQ_PORT)
-        #sleep(90)
-        #logging.debug("slept 90 seconds")
         self.connector = messaging.morphemic.Connection(ACTIVEMQ_USER,ACTIVEMQ_PASSWORD, host=ACTIVEMQ_HOSTNAME, port=ACTIVEMQ_PORT)
         #self.connector = messaging.morphemic.Connection('morphemic','morphemic', host='147.102.17.76', port=61616)
         #self.model = morphemic.model.Model(self)
@@ -128,33 +121,25 @@ class Gluonts(morphemic.handler.ModelHandler,messaging.listener.MorphemicListene
         self.run()
         pass
 
-
-
     def on_start_forecasting_gluonmachines(self, body):
         logging.debug("Gluonts Start Forecasting the following metrics :") 
         sent_metrics = body["metrics"]
-        logging.debug(sent_metrics)
         for metric in sent_metrics:
             if metric not in metrics:
                 metrics.add(metric)
-            #thread = threading.Thread(target=worker , args=(self, body, metric,))
             if  metric not in metrics_processes:
                 metrics_processes[metric] = Process(target=worker, args=(self, body, metric,))
                 metrics_processes[metric] .start()
                 
                 
 
-    def on_metrics_to_predict(self, body):
-        logging.debug("check the trained model for :") 
-        logging.debug(body) 
-        #getting data from datasetmaker
+    def on_metrics_to_predict(self, body): 
         dataset_preprocessor = CSVData(APP_NAME,start_collection='2h')
         dataset_preprocessor.prepare_csv()
         logging.debug("DATASET DOWNLOADED")
         
         for r in body:
             metric = r['metric']
-        #for metric in metrics:
             if not os.path.isfile(directory_path+'models/gluonts_'+metric+".pkl"): 
                 logging.debug("Training a GluonTS model for metric : " + metric)
                 model=gluonts.train(metric)
