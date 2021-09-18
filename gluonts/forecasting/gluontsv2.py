@@ -26,7 +26,7 @@ ACTIVEMQ_PORT = os.environ.get("ACTIVEMQ_PORT")
 
 predictionTimes = dict()
 models = dict()
-flags = {'avgResponseTime':0 , 'memory': 0}
+#flags = {'avgResponseTime':0 , 'memory': 0}
 metrics_processes=dict()
 metrics = set()
 
@@ -41,9 +41,9 @@ def worker(self,body,metric):
     predictionTimes[metric] = epoch_start
     
     while(True):
-        if flags[metric] == 0:
-            epoch_start = predictionTimes[metric]
-            flags[metric] = 1
+        #if flags[metric] == 0:
+            #epoch_start = predictionTimes[metric]
+            #flags[metric] = 1
         #load the model
         if  os.path.isfile(directory_path+'models/gluonts_'+metric+".pkl"):  
             logging.debug("Loading the trained model for metric: " + metric)
