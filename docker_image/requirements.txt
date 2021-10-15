@@ -1,0 +1,16 @@
+numpy
+stomp.py
+influxdb
+filelock
+python-slugify
+scikit-learn
+pandas
+scipy
+tqdm
+matplotlib
+tensorflow
+keras
+PyYAML
+Timeloop
+mxnet
+gluonts

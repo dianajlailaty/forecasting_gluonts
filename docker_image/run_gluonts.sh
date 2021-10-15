@@ -11,5 +11,7 @@ sudo docker build . -t gitlab.ow2.org:4567/melodic/morphemic-preprocessor/gluonm
 sudo docker login gitlab.ow2.org:4567
 sudo docker push gitlab.ow2.org:4567/melodic/morphemic-preprocessor/gluonmachines:morphemic-rc1.5
 
+docker run -t --env-file=variables.env --network=bridge $image_name
+
 
 

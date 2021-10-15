@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 import logging
 import itertools
-
 from sklearn import preprocessing
 from math import log
 from math import exp
@@ -18,7 +17,6 @@ import pickle
 import json
 import os
 import matplotlib.pyplot as plt
-
 import mxnet as mx
 from mxnet import gluon
 from gluonts.dataset.common import ListDataset
@@ -36,7 +34,7 @@ from sklearn.model_selection import ParameterGrid
 import statistics
 import math
 
-directory_path = "/morphemic_project/forecasting_gluonts/gluonts/"
+directory_path = "/morphemic_project/"
 
 def train(metric):
     data_file_path = os.path.join(os.environ.get("DATA_PATH", "./"), f'{os.environ.get("APP_NAME", "demo")}.csv')

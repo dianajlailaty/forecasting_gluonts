@@ -1,6 +1,6 @@
 import messaging
 import morphemic
-from gluonts import gluonts
+import gluonts_forecaster
 from time import time
 import logging
 import signal
@@ -30,7 +30,7 @@ models = dict()
 metrics_processes=dict()
 metrics = set()
 
-directory_path = "/morphemic_project/forecasting_gluonts/gluonts/"
+directory_path = "/morphemic_project/"
 
 def worker(self,body,metric):
 
@@ -54,7 +54,7 @@ def worker(self,body,metric):
             timestamp = int(time())   
             if (timestamp >= predictionTimes[metric]): 
                 logging.debug("Start the prediction for metric: " + metric)
-                predictions=gluonts.predict(models[metric] , number_of_forward_predictions , prediction_horizon , epoch_start , metric)
+                predictions=gluonts_forecaster.predict(models[metric] , number_of_forward_predictions , prediction_horizon , epoch_start , metric)
                 logging.debug(predictions)
                 yhats = predictions['values']
                 yhat_lowers = predictions['mins']
@@ -137,7 +137,7 @@ class Gluonts(morphemic.handler.ModelHandler,messaging.listener.MorphemicListene
             metric = r['metric']
             if not os.path.isfile(directory_path+'models/gluonts_'+metric+".pkl"): 
                 logging.debug("Training a GluonTS model for metric : " + metric)
-                model=gluonts.train(metric)
+                model=gluonts_forecaster.train(metric)
                 pkl_path = directory_path+"models/gluonts_"+metric+".pkl"
                 with open(pkl_path, "wb") as f:
                     pickle.dump(model, f)

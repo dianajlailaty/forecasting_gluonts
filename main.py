@@ -1,10 +1,10 @@
 import logging
-from forecasting import gluontsv2
+import gluonts_listener
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 
-e = gluontsv2.Gluonts()
+e = gluonts_listener.Gluonts()
 #try:
 #    e.start()
 #except KeyboardInterrupt:
