@@ -42,7 +42,7 @@ def train(metric):
    
     #changing the names and the format of the attributes
     gluonts_dataset= pd.DataFrame()
-    gluonts_dataset['ds'] = dataset["time"]
+    gluonts_dataset['ds'] = dataset["ems_time"]
     gluonts_dataset['y']=dataset[metric]
     gluonts_dataset['y'] = pd.to_numeric(gluonts_dataset['y'], errors='coerce')
     for  i in range (0,len(gluonts_dataset['ds'])):
