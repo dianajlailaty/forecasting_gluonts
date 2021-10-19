@@ -44,7 +44,6 @@ RUN cd /var/lib/morphemic/ \
     && cd morphemic-preprocessor-morphemic-rc1.5 \
     && cd morphemic-datasetmaker && python3 setup.py install \ 
     && cd ../.. \
-    && cp -R /var/lib/morphemic/morphemic-preprocessor-morphemic-rc1.5/amq-message-python-library /morphemic_project/messaging \
     && rm -rf /var/lib/morphemic \
     && mkdir -p /logs && mkdir /morphemic_project/models
 
